@@ -38,13 +38,23 @@ $(document).ready(function(){
   });
 
 function sendContact(){
-  // const submitButton = document.getElementById('submit-btn');
-  // submitButton.disabled = true;
+  const submitButton = document.getElementById('submit-btn');
+  submitButton.disabled = true;
 
   const contactForm = document.getElementById('contact-form');
   const data = new URLSearchParams();
   for(const pair of new FormData(contactForm)){
     data.append(pair[0], pair[1]);
+    if(pair[1] ==''){
+      Swal.fire({
+        title: 'Error!',
+        text: 'please complete all the fields and then submit agin!',
+        icon: 'error',
+        confirmButtonText: 'ok'
+      }); 
+      submitButton.disabled = false;
+      return;
+    }
   }
   console.log(data)
 const url =`https://formsubmit.co/mdalaminn8733@gmail.com`;
@@ -54,22 +64,28 @@ fetch(url, {
   body: data
 })
 .then(res => {
+  submitButton.disabled = false;
+  console.log(submitButton);
+  contactForm.reset();
   Swal.fire({
     icon: 'success',
     title: 'Thank You',
     showConfirmButton: true,
     
   })
-  // submitButton.disabled = false;
+
+  
+}).catch(error =>{
+  submitButton.disabled = false;
   contactForm.reset();
+  Swal.fire({
+    title: 'Error!',
+    text: 'Do you want to continue',
+    icon: 'error',
+    confirmButtonText: 'ok'
+  }); 
   
 })
 
 }
-// error pop 
-/*Swal.fire({
-  title: 'Error!',
-  text: 'Do you want to continue',
-  icon: 'error',
-  confirmButtonText: 'Cool'
-})*/
+
